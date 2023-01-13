@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <title>Welcome to my id card</title>
+    </head>
+    <body >
+        <font size="8"><div style="text-align: center">Welcome To My Person</div></font>
+        <hr />
+
+        <script>
+            const url = "http://localhost:8080/person";
+
+            //get data from server
+            function get() {
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    dataType: "json",
+                    success: function (data) {
+                        //start function
+                        $("#mytable").find("tbody").empty(); //for empty table if data exists
+                        $.each(data, function (key, value) {
+                            //fill data to table
+                            var td =
+                                    "<tr><td>" +
+                                    value.id +
+                                    "</td> <td>" +
+                                    value.nik +
+                                    "</td> <td>" +
+                                    value.nama +
+                                    "</td> <td>" +
+                                    value.tanggal_lahir +
+                                    "</td> <td>" +
+                                    value.photo +
+                                    "</td> <td>" +
+                                    value.timestamp +
+                                    "</td></tr>";
+                            $("#mytable").find("tbody").append(td);
+                        });
+                    },
+                });
+            }
+
+            //create new data (membuat data baru)
+            function post() {
+                let edID = document.getElementById("myid").value;
+                let ednik = document.getElementById("mynik").value;
+                let ednama = document.getElementById("mynama").value;
+                let edtl = document.getElementById("mytl").value;
+                let edph = document.getElementById("myph").value;
+                let edtime = document.getElementById("mytime").value;
+                let dataText = {id: edID, nik: ednik, nama: ednama, tanggal_lahir: edtl, photo: edph, timestamp: edtime};
+                let dataJson = JSON.stringify(dataText);
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    data: dataJson,
+                    contentType: "application/json",
+                    dataType: "text",
+                    success: function (result) {
+                        get();
+                    },
+                });
+            }
+
+            //
+            function put() {
+                let edID = document.getElementById("myid").value;
+                let ednik = document.getElementById("mynik").value;
+                let ednama = document.getElementById("mynama").value;
+                let edtl = document.getElementById("mytl").value;
+                let edph = document.getElementById("myph").value;
+                let edtime = document.getElementById("mytime").value;
+                let dataText = {id: edID, nik: ednik, nama: ednama, tanggal_lahir: edtl, photo: edph, timestamp: edtime};
+                let dataJson = JSON.stringify(dataText);
+                $.ajax({
+                    url: "http://localhost:8080/data",
+                    method: "PUT",
+                    data: dataJson,
+                    contentType: "application/json",
+                    dataType: "text",
+                    success: function (result) {
+                        get();
+                    },
+                });
+            }
+
+            //
+            function delID() {
+                let edID = document.getElementById("myid").value;
+                let dataText = {id: edID};
+                let dataJson = JSON.stringify(dataText);
+                $.ajax({
+                    url: url,
+                    method: "DELETE",
+                    data: dataJson,
+                    contentType: "application/json",
+                    dataType: "text",
+                    success: function (result) {
+                        get();
+                    },
+                });
+            }
+        </script>
+         
+        //script untuk menampilkan nama per table
+        <table font size="8">
+            <tr>
+                <td>ID</td>
+                <td>:</td>
+                <td><input type="text" id="myid" name="myid" /></td>
+                <td><button onclick="get()" style="background-color: greenyellow">GET</button></td>
+            </tr>
+            <tr>
+                <td>NIK</td>
+                <td>:</td>
+                <td><input type="text" id="mynik" name="mynik" /></td>
+                <td><button onclick="post()" style="background-color: pink">INSERT</button></td>
+            </tr>
+            <tr>
+                <td>Nama</td>
+                <td>:</td>
+                <td><input type="text" id="mynama" name="mynama" /></td>
+                <td><button onclick="put()" style="background-color: blueviolet">UPDATE</button></td>
+            </tr>
+            <tr>
+                <td>Tanggal Lahir</td>
+                <td>:</td>
+                <td><input type="text" id="mytl" name="mytl" /></td>
+                <td><button onclick="delID()" style="background-color: yellow">DELETE</button></td>
+            </tr><
+            <tr>
+                <td>Photo</td>
+                <td>:</td>
+                <td><input type="text" id="myph" name="myph" /></td>
+
+            </tr>
+            <tr>
+                <td>TimeStamp</td>
+                <td>:</td>
+                <td><input type="text" id="mytime" name="mytime" /></td>
+
+            </tr>
+            <tr>
+
+                <td></td>
+                <td></td>
+                <td></td>
+            <br><br>
+
+
+            <td></td><button onclick="put()" style="background-color: blueviolet">UPDATE</button><td></td>
+            <td>><td><button onclick="delID()" style="background-color: yellow">DELETE</button></td>
+        </tr>
+    </table>
+
+    <hr />
+    <br />
+
+    //Untuk menampilkan table dan is dari data yang talah diinput 
+    <table id="mytable" border="5" >
+        <thead >
+            <tr>
+                <th>ID</th>
+                <th>NIK</th>
+                <th>Nama</th>
+                <th>Tanggal Lahir</th>
+                <th>Photo</th>
+                <th>TimeStamp</th>
+
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</body>
+</html>
